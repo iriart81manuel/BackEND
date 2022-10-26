@@ -1,34 +1,22 @@
-const express = require("express");
-const path = require("path");
+const express = require('express');
+const mainRouter = require('./routes/index');
 
+/** INICIALIZACION API con EXPRESS */
 const app = express();
 const puerto = 8080;
-const server = app.listen(puerto, () => console.log("Server en", puerto));
+const server = app.listen(puerto, () =>
+  console.log('Server en puerto', puerto)
+);
 
-server.on("error", (err) => {
-  console.log("Error en el server.. =>", err);
+server.on('error', (err) => {
+  console.log('ERROR ATAJADO', err);
 });
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-let visitas = 0;
+/**
+ * DEFINICION DE LOS ROUTERS
+ */
 
-
-app.get("/", (request, response) => {
-  visitas++;
-  const myfilePath = path.resolve(__dirname, "titulo.html");
-  response.sendFile(myfilePath);
-});
-
-app.get("/visitas", (request, response) => {
-  visitas++;
-  response.json({
-    msg: `Visita numero ${visitas}`,
-  });
-});
-
-app.get("/fyh", (request, response) => {
-  visitas++;
-  response.json({
-    fyh: new Date(),
-  });
-});
+app.use('/', mainRouter);
